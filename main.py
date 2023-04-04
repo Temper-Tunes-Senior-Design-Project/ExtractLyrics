@@ -59,11 +59,10 @@ def get_lyrics(request):
         'Access-Control-Allow-Headers': 'Content-Type',
         'Access-Control-Max-Age': '3600'
     }   
-    # request_json = request.get_json()
     # try:
     #     request_json = request.get_json()
-    # except on Exception EXCEPTION:
-    #     print
+    # except:
+    #     request_json = None
     request_args = request.args
     artistnames = []
     songname = ''

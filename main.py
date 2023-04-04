@@ -41,10 +41,11 @@ def _handleLyricAppend(lyrics_list, lyric):
 
 #Determines whether a song will need to be translated (returns the link if it does, otherwise returns None)
 def _getSongTranslationLink(html):
-    translation_tags = html.findAll('a', class_='TextButton-sc-192nsqv-0 hVAZmF LyricsControls__TextButton-sghmdv-6 hXTHjZ')
+    translation_tags = html.findAll('a', class_='TextButton-sc-192nsqv-0 hVAZmF LyricsHeader__TextButton-ejidji-8 exgrqG')
     for tag in translation_tags:
         if "english-translations" in tag['href']:
             return tag['href']
+
     return None
 
 #Determines whether a page exists

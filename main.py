@@ -2,6 +2,7 @@ import functions_framework
 import requests
 from bs4 import BeautifulSoup
 from bs4 import element
+import re
 
 #Helps parse miscellaneous tags <i>, </br>, etc,.
 def _lyricsHelper(html, lyrics_list):
@@ -41,7 +42,7 @@ def _handleLyricAppend(lyrics_list, lyric):
 
 #Determines whether a song will need to be translated (returns the link if it does, otherwise returns None)
 def _getSongTranslationLink(html):
-    translation_tags = html.findAll('a', class_='TextButton-sc-192nsqv-0 hVAZmF LyricsHeader__TextButton-ejidji-8 exgrqG')
+    translation_tags = html.find_all('a', {"class": re.compile('TextButton-sc-192nsqv-0 hVAZmF LyricsHeader__TextButton*')})
     for tag in translation_tags:
         if "english-translations" in tag['href']:
             return tag['href']
@@ -60,16 +61,9 @@ def get_lyrics(request):
         'Access-Control-Allow-Headers': 'Content-Type',
         'Access-Control-Max-Age': '3600'
     }   
-    # try:
-    #     request_json = request.get_json()
-    # except:
-    #     request_json = None
     request_args = request.args
     artistnames = []
     songname = ''
-    # if request_json and all(k in request_json for k in ("artists","song")):
-    #     artistnames = request_json['artists']
-    #     songname = request_json['song']
     if request_args and all(k in request_args for k in ("artists","song")):
         artistnames = request_args['artists'].split(',')
         songname = request_args['song']
@@ -103,25 +97,3 @@ def get_lyrics(request):
                     english = True
             if english: lyrics_list = _getLyricsFromHTML(html)
     return ({"lyrics":lyrics_list}, 200, headers)
-
-###################
-   
-   # request_json = request.get_json(silent=True)
-   # request_args = request.args
-   # print("json: \n",request_json,sep='')
-   # print("args: \n",request_args,sep='')
-   # """HTTP Cloud Function.
-   # Args:
-   #    request (flask.Request): The request object.
-   #    <https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data>
-   # Returns:
-   #    The response text, or any set of values that can be turned into a
-   #    Response object using `make_response`
-   #    <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
-   # """
-   # if request_json and 'name' in request_json:
-   #    name = request_json['name']
-   # elif request_args and 'name' in request_args:
-   #    name = request_args['name']
-   # else:
-   #    name = 'World'
